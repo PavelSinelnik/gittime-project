@@ -1,7 +1,8 @@
 import sqlite3
-
+import time from time
 import os
 import json
+start = time()
 folder = 'D:\\folder\\main1'
 con = sqlite3.connect('15.db')
 cur=con.cursor()
@@ -83,3 +84,5 @@ for root,dirs,files in os.walk(folder):
 
 cur.close()
 con.commit()
+finish = time()
+print(finish-start)
