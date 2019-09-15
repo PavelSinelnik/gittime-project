@@ -33,7 +33,7 @@ for root,dirs,files in os.walk(folder):
     for fil in files:
         if "RFID.txt" in fil:
             
-            if CountryName != root.split("\\")[3]:
+            if CountryName != root.split("\\")[3]:     
                 cur.execute("SELECT CountryName FROM countries  WHERE countries.CountryName  ='{}'".format(root.split("\\")[3]))
                 data = cur.fetchone()
                 if data != None:
