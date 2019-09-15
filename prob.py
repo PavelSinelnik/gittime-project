@@ -1,10 +1,10 @@
 import sqlite3
-import time from time
+from time import time
 import os
 import json
 start = time()
 folder = 'D:\\folder\\main1'
-con = sqlite3.connect('15.db')
+con = sqlite3.connect('C:\\Users\\Pavel\\Desktop\\git-project\\db')
 cur=con.cursor()
 
 cur.execute(
