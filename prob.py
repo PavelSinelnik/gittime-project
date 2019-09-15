@@ -4,7 +4,7 @@ import os
 import json
 start = time()
 folder = 'D:\\folder\\main1'
-con = sqlite3.connect('C:\\Users\\Pavel\\Desktop\\git-project\\db')
+con = sqlite3.connect('C:\\Users\\Pavel\\Desktop\\git-project\\db\\15.db')
 cur=con.cursor()
 
 cur.execute(
@@ -34,9 +34,9 @@ for root,dirs,files in os.walk(folder):
         if "RFID.txt" in fil:
             
             if CountryName != root.split("\\")[3]:
-                cur.execute("SELECT CAST(CASE WHEN EXISTS ( SELECT CountryName FROM countries  WHERE countries.CountryName  ='{}') THEN 1 ELSE 0 END AS BIT) AS Result".format(root.split("\\")[3]))
+                cur.execute("SELECT CountryName FROM countries  WHERE countries.CountryName  ='{}'".format(root.split("\\")[3]))
                 data = cur.fetchone()
-                if data[0] == 1:
+                if data != None:
                     cur.execute("SELECT id FROM countries WHERE countries.CountryName='{}'".format(root.split("\\")[3]))
                     CountryInfo = cur.fetchone()
                     Country_id =CountryInfo[0]
@@ -51,9 +51,9 @@ for root,dirs,files in os.walk(folder):
                     CountryName = CountryInfo[0][1]
                     
             if DocumentName != root.split("\\")[4]:
-                cur.execute("SELECT CAST(CASE WHEN EXISTS ( SELECT DocumentName FROM TypeOfDocs  WHERE TypeOfDocs.DocumentName  ='{}' AND Country_Ind = '{}') THEN 1 ELSE 0 END AS BIT) AS Result".format(root.split("\\")[4],Country_id))
+                cur.execute("SELECT DocumentName FROM TypeOfDocs  WHERE TypeOfDocs.DocumentName  ='{}' AND Country_Ind = '{}'".format(root.split("\\")[4],Country_id))
                 data = cur.fetchone()
-                if data[0] == 1:
+                if data != None:
                     cur.execute("SELECT id FROM TypeOfDocs WHERE TypeOfDocs.DocumentName='{}' AND Country_Ind = '{}'".format(root.split("\\")[4],Country_id))
                     DocumentInfo = cur.fetchone()
                     Document_id =DocumentInfo[0]
@@ -66,9 +66,9 @@ for root,dirs,files in os.walk(folder):
                     DocumentName=DocumentInfo[0][1]
                     
             if SampleName != os.path.basename(root):
-                cur.execute("SELECT CAST(CASE WHEN EXISTS ( SELECT SampleName FROM samples  WHERE samples.SampleName  ='{}' AND samples.Document_Ind = '{}') THEN 1 ELSE 0 END AS BIT) AS Result".format(os.path.basename(root),Document_id))                          
+                cur.execute("SELECT SampleName FROM samples  WHERE samples.SampleName  ='{}' AND samples.Document_Ind = '{}'".format(os.path.basename(root),Document_id))                          
                 data=cur.fetchone()
-                if data[0] == 1:
+                if data != None:
                     cur.execute("SELECT id FROM samples WHERE samples.SampleName='{}' AND Document_Ind = '{}'".format(os.path.basename(root),Document_id))
                     SampleInfo = cur.fetchone()
                     Sample_id=SampleInfo[0]
