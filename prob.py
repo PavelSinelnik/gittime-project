@@ -28,6 +28,9 @@ cur.execute(
 CountryName=''
 DocumentName=''
 SampleName=''
+Country_id=0
+Document_id=0
+Sample_id=0
 for root,dirs,files in os.walk(folder):
     
     for fil in files:
