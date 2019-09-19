@@ -1,10 +1,9 @@
 import sqlite3
-from time import time
+#from time import time
 import os
-import json
-start = time()
-folder = 'D:\\folder\\main1'
-con = sqlite3.connect('C:\\Users\\Pavel\\Desktop\\git-project\\db\\15.db')
+#start = time()
+folder = 'D:\\folder\\main'
+con = sqlite3.connect('C:\\Users\\User\\Desktop\\gittime-project\\bd\\15.db')
 cur=con.cursor()
 
 cur.execute(
@@ -25,12 +24,24 @@ cur.execute(
         'SampleName TEXT,'
         'FOREIGN KEY (Document_Ind) REFERENCES TypeOfDocs(id) ON UPDATE CASCADE,'
         'FOREIGN KEY (Document_Ind) REFERENCES TypeOfDocs(id) ON DELETE CASCADE)')
+
+cur.execute('SELECT COUNT(*) FROM "countries"')
+data=cur.fetchone()
+Country_id= (data[0]+1)
+
+cur.execute('SELECT COUNT(*) FROM "TypeOfDocs"')
+data=cur.fetchone()
+Document_id=(data[0]+1)
+
+cur.execute('SELECT COUNT(*) FROM "samples"')
+data=cur.fetchone()
+Sample_id=(data[0]+1)
+
 CountryName=''
 DocumentName=''
 SampleName=''
-Country_id=0
-Document_id=0
-Sample_id=0
+
+
 for root,dirs,files in os.walk(folder):
     
     for fil in files:
@@ -39,42 +50,39 @@ for root,dirs,files in os.walk(folder):
             if CountryName != root.split("\\")[3]:     
                 cur.execute("SELECT id FROM countries  WHERE countries.CountryName  ='{}'".format(root.split("\\")[3]))
                 data = cur.fetchone()
+
                 if data != None:
-                   
                     Country_id =data[0]
                     CountryName = root.split("\\")[3]
                 
                 
                 else :
                     cur.execute('INSERT INTO countries(id,CountryName)  VALUES(?,?)',(None,root.split("\\")[3]))
-                   
                     Country_id +=1
                     CountryName = root.split("\\")[3]
                     
             if DocumentName != root.split("\\")[4]:
                 cur.execute("SELECT id FROM TypeOfDocs  WHERE TypeOfDocs.DocumentName  ='{}' AND Country_Ind = '{}'".format(root.split("\\")[4],Country_id))
                 data = cur.fetchone()
+
                 if data != None:
-                    
                     Document_id =data[0]
                     DocumentName=root.split("\\")[4]
                     
                 else:
                     cur.execute('INSERT INTO TypeOfDocs(Country_Ind,id,DocumentName)  VALUES(?,?,?)',(Country_id,None,root.split("\\")[4]))
-                    
                     Document_id +=1
                     DocumentName=root.split("\\")[4]
                     
             if SampleName != os.path.basename(root):
                 cur.execute("SELECT id FROM samples  WHERE samples.SampleName  ='{}' AND samples.Document_Ind = '{}'".format(os.path.basename(root),Document_id))                          
                 data=cur.fetchone()
+
                 if data != None:
-                   
                     Sample_id=data[0]
                     SampleName=os.path.basename(root)
                 else:
                     cur.execute('INSERT INTO samples(id,Document_Ind,SampleName)  VALUES(?,?,?)',(None,Document_id,os.path.basename(root)))
-                    
                     Sample_id +=1
                     SampleName=os.path.basename(root)
                                 
@@ -83,5 +91,9 @@ for root,dirs,files in os.walk(folder):
 
 cur.close()
 con.commit()
-finish = time()
-print(finish-start)
+#finish = time()
+#print(finish-start)
+#9
+#8
+#25
+#configparser
